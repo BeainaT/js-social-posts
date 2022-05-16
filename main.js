@@ -69,15 +69,17 @@ function addPost(obj, to) {
     //assegno la costante al contenuto del tag template in html
     const post = document.querySelector("#tpl_post").content.cloneNode(true);
     //i valori delle chiavi del mio oggetto verranno stampati nei tag corrispondenti
+    post.querySelector(".js-like-button a") = obj.id; //bug
     post.querySelector(".profile-pic").src = obj["author"].image;
     post.querySelector(".profile-pic").alt = obj["author"].name;
     post.querySelector(".post-meta__author").innerHTML = obj["author"].name;
-    post.querySelector(".post-meta__time").innerHTML = obj.created;
     post.querySelector(".post__text").innerHTML = obj.content;
     post.querySelector(".post__image img").src = obj.media;
+    post.querySelector(".post-meta__time").innerHTML = obj.created;
+    post.querySelector(".js-likes-counter").innerHTML = obj.likes;
     //appendo il contenuto al suo contenitore
     to.append(post);
-}
+};
 
 /* MAIN */
 const postsContainer = document.querySelector("#container");
@@ -87,4 +89,12 @@ for (let i=0; i < posts.length; i++) {
     let info = posts[i];
     //chiamo la funzione
     addPost(info, postsContainer);
-}
+};
+//seleziono elemento da DOM
+const like = document.querySelector(".js-like-button");
+let likesCounter = document.querySelector(".js-likes-counter");
+//creo evento al click
+like.addEventListener("click", function() {
+    like.classList.add("like-button--liked");
+    likesCounter.innerHTML = ""; //bug
+});
