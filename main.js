@@ -66,44 +66,25 @@ const posts = [
 
 /* FUNCTIONS */
 function addPost(obj, to) {
-    const post =
-    `<div class="post">
-        <div class="post__header">
-            <div class="post-meta">                    
-                <div class="post-meta__icon">
-                    <img class="profile-pic" src="${obj["author"].image}" alt="${obj["author"].name}">                    
-                </div>
-                <div class="post-meta__data">
-                    <div class="post-meta__author">${obj["author"].name}</div>
-                    <div class="post-meta__time">${obj.created}</div>
-                </div>                    
-            </div>
-        </div>
-        <div class="post__text">${obj.content}</div>
-        <div class="post__image">
-            <img src="${obj.media}" alt="">
-        </div>
-        <div class="post__footer">
-            <div class="likes js-likes">
-                <div class="likes__cta">
-                    <a class="like-button  js-like-button" href="#" data-postid="${obj.id}">
-                        <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
-                        <span class="like-button__label">Mi Piace</span>
-                    </a>
-                </div>
-                <div class="likes__counter">
-                    Piace a <b id="like-counter-1" class="js-likes-counter">${obj.likes}</b> persone
-                </div>
-            </div> 
-        </div>            
-    </div>`
-
-    to.innerHTML += post;
+    //assegno la costante al contenuto del tag template in html
+    const post = document.querySelector("#tpl_post").content.cloneNode(true);
+    //i valori delle chiavi del mio oggetto verranno stampati nei tag corrispondenti
+    post.querySelector(".profile-pic").src = obj["author"].image;
+    post.querySelector(".profile-pic").alt = obj["author"].name;
+    post.querySelector(".post-meta__author").innerHTML = obj["author"].name;
+    post.querySelector(".post-meta__time").innerHTML = obj.created;
+    post.querySelector(".post__text").innerHTML = obj.content;
+    post.querySelector(".post__image img").src = obj.media;
+    //appendo il contenuto al suo contenitore
+    to.append(post);
 }
 
 /* MAIN */
 const postsContainer = document.querySelector("#container");
+//Ciclo su array per leggere gli oggetti
 for (let i=0; i < posts.length; i++) {
+    //assegno variabile ai miei oggetti - info = obj
     let info = posts[i];
+    //chiamo la funzione
     addPost(info, postsContainer);
 }
