@@ -69,10 +69,10 @@ function addPost(obj, to) {
     //assegno la costante al contenuto del tag template in html
     const post = document.querySelector("#tpl_post").content.cloneNode(true);
     //i valori delle chiavi del mio oggetto verranno stampati nei tag corrispondenti
-    post.querySelector(".js-like-button a") = obj.id; //bug
-    post.querySelector(".profile-pic").src = obj["author"].image;
-    post.querySelector(".profile-pic").alt = obj["author"].name;
-    post.querySelector(".post-meta__author").innerHTML = obj["author"].name;
+    post.querySelector(".js-like-button").id = obj.id;
+    post.querySelector(".profile-pic").src = obj.author.image;
+    post.querySelector(".profile-pic").alt = obj.author.name;
+    post.querySelector(".post-meta__author").innerHTML = obj.author.name;
     post.querySelector(".post__text").innerHTML = obj.content;
     post.querySelector(".post__image img").src = obj.media;
     post.querySelector(".post-meta__time").innerHTML = obj.created;
@@ -87,14 +87,29 @@ const postsContainer = document.querySelector("#container");
 for (let i=0; i < posts.length; i++) {
     //assegno variabile ai miei oggetti - info = obj
     let info = posts[i];
-    //chiamo la funzione
+    if (info.author.image === null) {
+        info.author.image = "https://via.placeholder.com/300x300";
+    }
     addPost(info, postsContainer);
 };
-//seleziono elemento da DOM
-const like = document.querySelector(".js-like-button");
-let likesCounter = document.querySelector(".js-likes-counter");
 //creo evento al click
-like.addEventListener("click", function() {
-    like.classList.add("like-button--liked");
-    likesCounter.innerHTML = ""; //bug
-});
+//seleziono elementi da DOM
+let likesCounter = document.querySelectorAll(".js-likes-counter");
+let likeBtn = document.querySelectorAll(".js-like-button");
+//Creo array da popolare
+let likeArray = [];
+//Ciclo per gli elementi con la classe selezionata
+for (let i = 0; i < likeBtn.length; i++) {
+    //al click su ogni elemento, aggiungo classe CSS per cambiare colore(SE non è presente), incremento numero likes e pusho nell'array
+    likeBtn[i].addEventListener("click", function() {
+        if(!likeBtn[i].classList.contains("like-button--liked")) {
+            likeBtn[i].classList.add("like-button--liked");
+            likesCounter[i].innerHTML = ++posts[i].likes;
+            likeArray.push(posts[i].id);                
+        } else {
+            //altrimenti rimuovo la classe CSS e decremento il numero di likes.
+            likeBtn[i].classList.remove("like-button--liked");
+            likesCounter[i].innerHTML = --posts[i].likes;            
+        };
+    });
+};
